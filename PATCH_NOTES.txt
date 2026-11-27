@@ -1,0 +1,22 @@
+Jarvis v2.1 - review fixes
+
+Files:
+- jarvis_v21_fixed.py: corrected bot source
+- jarvis_setup_fixed.sh: corrected installer
+
+Changes:
+1. Pending confirmation callbacks now validate callback kind, origin chat, issuer, and expiry before running actions.
+2. Candidate-selection callbacks validate chat, expiry, and candidate index before accessing the list.
+3. Bot owner cannot be demoted or have role permissions changed through Jarvis; the acting user cannot change their own role through this flow.
+4. Promote, promote_full, and demote actions now all require explicit confirmation, including direct commands and AI-generated admin actions.
+5. Unexpected exceptions in run_action are logged with traceback and return a generic safe error to the user.
+6. Installer downloads to a temporary file, checks size and Python syntax, then atomically installs the validated source instead of overwriting the live file first.
+
+Validation performed:
+- python3 -m py_compile jarvis_v21_fixed.py: PASS
+- bash -n jarvis_setup_fixed.sh: PASS
+- AST parse of the full Python source: PASS
+
+Limitations:
+- Runtime Telegram/API integration tests were not run because aiogram and aiosqlite are not installed in this analysis environment.
+- Installer validates syntax and minimum size, not cryptographic authenticity of the GitHub download. Pin a trusted SHA-256 or commit before production deployment.
